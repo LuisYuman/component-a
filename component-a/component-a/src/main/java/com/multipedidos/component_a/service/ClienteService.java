@@ -16,7 +16,7 @@ public class ClienteService {
 
     @Transactional
     public ClienteDTO crear(ClienteInput in) {
-        if (repo.existByCorreo(in.correo())) {
+        if (repo.existsByCorreo(in.correo())) {
             throw new IllegalArgumentException("El correo ya está registrado");
         }
         Cliente c = repo.save(Cliente.builder()
