@@ -12,24 +12,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import com.multipedidos.multipedidos_common.OperacionesNegocio;
+
 @Service @RequiredArgsConstructor
 public class PedidoService {
     private final PedidoRepository repo;
 
     // TODO: reemplazar por Librería C (OperacionesNegocio) más adelante
-    private double calcularTotalConIVA(double subtotal) { return subtotal * 1.12; }
-    private double aplicarDescuento(double total, double porcentaje) { return total - (total * (porcentaje/100.0)); }
+    //private double calcularTotalConIVA(double subtotal) { return subtotal * 1.12; }
+    //private double aplicarDescuento(double total, double porcentaje) { return total - (total * (porcentaje/100.0)); }
 
     @Transactional
     public PedidoDTO crear(PedidoInput in) {
         double subtotal = in.productos().stream()
                 .mapToDouble(ProductoDTO::precio).sum();
 
-        double total = calcularTotalConIVA(subtotal);
+        double total = OperacionesNegocio.calcularTotalConIVA(subtotal);
 
         // Regla ejemplo: si subtotal > 500, 5% de descuento
         if (subtotal > 500) {
-            total = aplicarDescuento(total, 5.0);
+            total = OperacionesNegocio.aplicarDescuento(total, 5.0);
         }
 
         Pedido p = Pedido.builder()
